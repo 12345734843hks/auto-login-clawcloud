@@ -10,12 +10,10 @@ jobs:
   auto-login:
     runs-on: ubuntu-latest
     
-FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
