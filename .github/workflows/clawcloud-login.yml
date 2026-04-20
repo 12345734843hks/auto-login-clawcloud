@@ -1,4 +1,3 @@
-# 文件名: .github/workflows/clawcloud-login.yml
 name: ClawCloud Run Auto Login (2FA Support)
 
 on:
@@ -9,8 +8,8 @@ on:
 jobs:
   auto-login:
     runs-on: ubuntu-latest
-  with:
-          node-version: '24.0'
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
