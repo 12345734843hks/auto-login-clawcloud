@@ -9,13 +9,12 @@ on:
 jobs:
   auto-login:
     runs-on: ubuntu-latest
-    # 【关键修改】设置环境变量强制使用Node 24
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,6 +34,20 @@ jobs:
           # 【极其关键的新增代码】让 Playwright 自动把 Ubuntu 服务器缺失的图形界面底层依赖全装上！
           playwright install-deps chromium
 
+      - name: Run Login Script
+        env:
+          GH_USERNAME: ${{ secrets.GH_USERNAME }}
+          GH_PASSWORD: ${{ secrets.GH_PASSWORD }}
+          GH_2FA_SECRET: ${{ secrets.GH_2FA_SECRET }}
+        # 带有 -u 参数，确保子进程输出不被屏蔽，实时打印日志
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" python -u login_script.py
+
+      - name: Upload Debug Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-debug-screenshots
+          path: "*.png"
       - name: Run Login Script
         env:
           GH_USERNAME: ${{ secrets.GH_USERNAME }}
